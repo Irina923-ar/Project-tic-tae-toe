@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function StartPage(/* { playerTurn, cells } */) {
+function StartPage() {
   const [secondPlayerMark, setSecondPlayerMark] = useState("O");
   const svgX = (
     <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
@@ -29,12 +29,13 @@ function StartPage(/* { playerTurn, cells } */) {
   const [scoreTie, setScoreTie] = useState(0);
   const [scoreCpu, setScoreCpu] = useState(0);
   const [isComputerTurn, setIsComputerTurn] = useState(false);
+
   const initializeGame = () => {
     setValueArray(Array(9).fill(""));
     setPlayerOneChoices([]);
     setPlayerTwoChoices([]);
     setClickCounter(0);
-    setPlayerTurn("X");
+    // setPlayerTurn("X");
     setIsComputerTurn(false);
   };
 
@@ -49,123 +50,117 @@ function StartPage(/* { playerTurn, cells } */) {
     [7, 8, 9],
   ];
 
-  const boardIsFull = () => {
+  const boardIsFull = (cells) => {
     return cells.every((cell) => cell === "X" || cell === "O");
   };
 
-  const cellClickHandlerPlayer = (e) => {
-    const target = e.target;
+  // const cellClickHandlerPlayer = (e) => {
+  //   const target = e.target;
 
-    target.innerHTML = currentPlayer;
+  //   target.innerHTML = currentPlayer;
 
-    if (currentPlayer === "X") {
-      setCurrentPlayer("O");
-    } else {
-      setCurrentPlayer("X");
-    }
+  //   if (currentPlayer === "X") {
+  //     setCurrentPlayer("O");
+  //   } else {
+  //     setCurrentPlayer("X");
+  //   }
 
-    setClickCounter((prevCounter) => prevCounter + 1);
+  //   setClickCounter((prevCounter) => prevCounter + 1);
 
-    const winner = checkWinner();
-    if (winner === "X") {
-      calculateScore(true, false);
-      setPlayerOneScore((prevScore) => prevScore + 1);
-    } else if (winner === "O") {
-      calculateScore(false, true);
-      setPlayerTwoScore((prevScore) => prevScore + 1);
-    } else if (clickCounter === 8) {
-      calculateScore(false, false);
-      setTieScore((prevScore) => prevScore + 1);
-    }
+  //   const winner = checkWinner();
+  //   if (winner === "X") {
+  //     calculateScore(true, false);
+  //     setPlayerOneScore((prevScore) => prevScore + 1);
+  //   } else if (winner === "O") {
+  //     calculateScore(false, true);
+  //     setPlayerTwoScore((prevScore) => prevScore + 1);
+  //   } else if (clickCounter === 8) {
+  //     calculateScore(false, false);
+  //     setTieScore((prevScore) => prevScore + 1);
+  //   }
 
-    checkWinner();
-  };
+  //   checkWinner();
+  // };
 
-  const makeComputerMove = () => {
-    const emptyCells = Array.from(cells).filter(
-      (cell) => cell.innerHTML === ""
-    );
-    const randomIndex = Math.floor(Math.random() * emptyCells.length);
-    const cell = emptyCells[randomIndex];
-    cell.innerHTML = computerChoices[0];
+  // const makeComputerMove = () => {
+  //   const emptyCells = Array.from(cells).filter((cell) => cell.innerHTML === "");
+  //   const randomIndex = Math.floor(Math.random() * emptyCells.length);
+  //   const cell = emptyCells[randomIndex];
+  //   cell.innerHTML = computerChoices[0];
 
-    setClickCounter((prevCounter) => prevCounter + 1);
+  //   setClickCounter((prevCounter) => prevCounter + 1);
 
-    if (currentPlayer === "X") {
-      setCurrentPlayer("O");
-    } else {
-      setCurrentPlayer("X");
-    }
+  //   if (currentPlayer === "X") {
+  //     setCurrentPlayer("O");
+  //   } else {
+  //     setCurrentPlayer("X");
+  //   }
 
-    const winner = checkWinner();
-    if (winner === "X") {
-      calculateScore(true, false);
-      setPlayerOneScore((prevScore) => prevScore + 1);
-    } else if (winner === "O") {
-      calculateScore(false, true);
-      setPlayerTwoScore((prevScore) => prevScore + 1);
-    } else if (clickCounter >= 8) {
-      calculateScore(false, false);
-      setTieScore((prevScore) => prevScore + 1);
-    } else {
-      setIsComputerTurn(false);
-    }
+  //   const winner = checkWinner();
+  //   if (winner === "X") {
+  //     calculateScore(true, false);
+  //     setPlayerOneScore((prevScore) => prevScore + 1);
+  //   } else if (winner === "O") {
+  //     calculateScore(false, true);
+  //     setPlayerTwoScore((prevScore) => prevScore + 1);
+  //   } else if (clickCounter >= 8) {
+  //     calculateScore(false, false);
+  //     setTieScore((prevScore) => prevScore + 1);
+  //   } else {
+  //     setIsComputerTurn(false);
+  //   }
 
-    checkWinner();
-  };
+  //   checkWinner();
+  // };
 
-  const cellClickHandlerComputer = (e) => {
-    if (isComputerTurn) {
-      return;
-    }
+  // const cellClickHandlerComputer = (e) => {
+  //   if (isComputerTurn) {
+  //     return;
+  //   }
 
-    const target = e.target;
-    target.innerHTML = playerOneChoices[0];
+  //   const target = e.target;
+  //   target.innerHTML = playerOneChoices[0];
 
-    setClickCounter((prevCounter) => prevCounter + 1);
+  //   setClickCounter((prevCounter) => prevCounter + 1);
 
-    if (currentPlayer === "X") {
-      setCurrentPlayer("O");
-    } else {
-      setCurrentPlayer("X");
-    }
+  //   if (currentPlayer === "X") {
+  //     setCurrentPlayer("O");
+  //   } else {
+  //     setCurrentPlayer("X");
+  //   }
 
-    const winner = checkWinner();
-    if (winner === "X") {
-      calculateScore(true, false);
-      setPlayerOneScore((prevScore) => prevScore + 1);
-      setIsComputerTurn(false);
-    } else if (winner === "O") {
-      calculateScore(false, true);
-      setPlayerTwoScore((prevScore) => prevScore + 1);
-      setIsComputerTurn(false);
-    } else if (clickCounter >= 8) {
-      calculateScore(false, false);
-      setTieScore((prevScore) => prevScore + 1);
-      setIsComputerTurn(false);
-    } else {
-      setIsComputerTurn(true);
-      setTimeout(makeComputerMove, 500);
-    }
+  //   const winner = checkWinner();
+  //   if (winner === "X") {
+  //     calculateScore(true, false);
+  //     setPlayerOneScore((prevScore) => prevScore + 1);
+  //     setIsComputerTurn(false);
+  //   } else if (winner === "O") {
+  //     calculateScore(false, true);
+  //     setPlayerTwoScore((prevScore) => prevScore + 1);
+  //     setIsComputerTurn(false);
+  //   } else if (clickCounter >= 8) {
+  //     calculateScore(false, false);
+  //     setTieScore((prevScore) => prevScore + 1);
+  //     setIsComputerTurn(false);
+  //   } else {
+  //     setIsComputerTurn(true);
+  //     setTimeout(makeComputerMove, 500);
+  //   }
 
-    checkWinner();
-  };
+  //   checkWinner();
+  // };
 
-  const checkWinner = (currentBoard) => {
-    for (const pattern of winningPatterns) {
-      const [a, b, c] = pattern;
-      if (
-        currentBoard[a] &&
-        currentBoard[a] === currentBoard[b] &&
-        currentBoard[a] === currentBoard[c]
-      ) {
-        setWinner(currentBoard[a]);
-        return;
-      }
-    }
-  };
+  // const checkWinner = (currentBoard) => {
+  //   for (const pattern of winningPatterns) {
+  //     const [a, b, c] = pattern;
+  //     if (currentBoard[a] && currentBoard[a] === currentBoard[b] && currentBoard[a] === currentBoard[c]) {
+  //       setWinner(currentBoard[a]);
+  //       return;
+  //     }
+  //   }
+  // };
 
-  const isCombinationWinner = (combination) => {
+  const isCombinationWinner = (combination, cells) => {
     const [a, b, c] = combination;
     const cellA = cells[a - 1];
     const cellB = cells[b - 1];
@@ -186,15 +181,15 @@ function StartPage(/* { playerTurn, cells } */) {
     // Add your logic here
   };
 
-  const handleStartGamePlayer = () => {
-    onStartGamePlayer(secondPlayerMark);
-    setIsVisible(false);
-  };
+  // const handleStartGamePlayer = () => {
+  //   onStartGamePlayer(secondPlayerMark);
+  //   setIsVisible(false);
+  // };
 
-  const handleStartGameCPU = () => {
-    onStartGameCPU(secondPlayerMark);
-    setIsVisible(false);
-  };
+  // const handleStartGameCPU = () => {
+  //   onStartGameCPU(secondPlayerMark);
+  //   setIsVisible(false);
+  // };
 
   const selectXMark = () => {
     setSecondPlayerMark(svgX);
@@ -207,7 +202,7 @@ function StartPage(/* { playerTurn, cells } */) {
   /*   const checkWinner = () => {
     for (const pattern of winningPatterns) {
       const [a, b, c] = pattern;
-  
+
       if (board[a - 1] === 'X' && board[b - 1] === 'X' && board[c - 1] === 'X') {
         return 'X';
       } else if (board[a - 1] === 'O' && board[b - 1] === 'O' && board[c - 1] === 'O') {
@@ -219,30 +214,29 @@ function StartPage(/* { playerTurn, cells } */) {
   }
  */
 
-  const toggleGameVisibility = () => {
-    setIsVisible(!isVisible);
+  // const toggleGameVisibility = () => {
+  //   setIsVisible(!isVisible);
+  // };
+
+  const [playerMark, setPlayerMark] = useState("");
+
+  const handlePlayerMark = (e) => {
+    if (playerMark === e.target.name) return;
+    setPlayerMark(e.target.name);
   };
 
   return (
     <div className="start-page">
       <img className="logo" src="assets/logo.svg" alt="logo" />
       <div className="card bg-secondary-200">
-        <div className="title fs-200 text-secondary-300 fw-bold">
-          Pick player 1's mark
-        </div>
+        <div className="title fs-200 text-secondary-300 fw-bold">Pick player 1's mark</div>
         <div className="btn-switch">
           <button
-            onClick={selectXMark}
-            className={`switch switch-1 bg-secondary-100 ${
-              secondPlayerMark === "X" ? "active" : ""
-            }`}
+            name="X"
+            onClick={handlePlayerMark}
+            className={`switch bg-secondary-100 ${playerMark === "X" ? "switch-active" : ""}`}
           >
-            <svg
-              className="icon"
-              width="64"
-              height="64"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg name="X" className="icon" width="64" height="64" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
                 fill="#A8BFC9"
@@ -251,17 +245,11 @@ function StartPage(/* { playerTurn, cells } */) {
             </svg>
           </button>
           <button
-            onClick={selectOMark}
-            className={`switch switch-2 bg-secondary-100 ${
-              secondPlayerMark === "O" ? "active" : ""
-            }`}
+            name="O"
+            onClick={handlePlayerMark}
+            className={`switch bg-secondary-100 ${playerMark === "O" ? "switch-active" : ""}`}
           >
-            <svg
-              className="icon"
-              width="64"
-              height="64"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg name="O" className="icon" width="64" height="64" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
                 fill="#A8BFC9"
@@ -269,22 +257,20 @@ function StartPage(/* { playerTurn, cells } */) {
             </svg>
           </button>
         </div>
-        <div className="subtitle fs-100 text-secondary-300 fw-medium">
-          Remember: X goes first
-        </div>
+        <div className="subtitle fs-100 text-secondary-300 fw-medium">Remember: X goes first</div>
       </div>
       <div className="buttons">
         <button
           onClick={() => {
-            handleStartGameCPU();
-            toggleGameVisibility();
+            // handleStartGameCPU();
+            // toggleGameVisibility();
           }}
           className="btn btn-start-1 bg-primary-300 text-secondary-100 fs-300 fw-bold"
         >
           New Game (vs CPU)
         </button>
         <button
-          onClick={handleStartGamePlayer}
+          // onClick={handleStartGamePlayer}
           className="btn btn-start-2 bg-primary-100 text-secondary-100 fs-300 fw-bold"
         >
           New Game (vs player)
