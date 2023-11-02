@@ -1,20 +1,27 @@
 import "./App.css";
 import React, { useState } from "react";
-// import GameBoard from "./components/GameBoard";
+import GameBoard from "./components/GameBoard";
 // import Popup from "./components/Popup";
-// import PopupRestart from "./components/PopupRestart";
+import PopupRestart from "./components/PopupRestart";
 import StartPage from "./components/StartPage";
 
 function App() {
   const [startGame, setStartGame] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   return (
     <div>
-      {/* {!isVisible ? <StartPage></StartPage> : <GameBoard />} */}
-      <StartPage />
-      {/* <Popup></Popup> */}
+      {startGame ? (
+        <GameBoard showPopup={setShowPopup} />
+      ) : (
+        <StartPage startGame={setStartGame} />
+      )}
 
-      {/* <PopupRestart gameStatus={startGame} handleGameUpdate={setStartGame}></PopupRestart> */}
+      {/* <Popup></Popup> */}
+      <PopupRestart
+        restartGame={setStartGame}
+        showPopup={setShowPopup}
+      ></PopupRestart>
     </div>
   );
 }
