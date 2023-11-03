@@ -14,12 +14,12 @@ const svgO = (
   <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
-      fillRule="#F2B137"
+      fill="#f2b137"
     />
   </svg>
 );
 
-function GameBoard({ checkWinner, showPopup }) {
+function GameBoard({ checkWinner, showPopup, restartGame }) {
   const [cells, setCells] = useState(Array(9).fill(""));
   const [playerTurn, setPlayerTurn] = useState(svgX);
   const popupTitle = document.getElementById("popupTitle");
@@ -64,48 +64,55 @@ function GameBoard({ checkWinner, showPopup }) {
   };
 
   return (
-    <div className="board">
-      <div className="navbar">
-        <div>
-          <img className="logo" src="assets/logo.svg" alt="logo" />
-        </div>
-        <button className="turn fs-200 text-secondary-300 fw-bold">
-          <div className="player-turn">{playerTurn}</div> TURN
-        </button>
-        <button
-          className="btn-restart bg-secondary-300"
-          onClick={() => showPopup(true)}
-        >
-          <img
-            className="icon-restart"
-            src="assets/icon-restart.svg"
-            alt="restart"
-          />
-        </button>
-      </div>
-      <div className="board-table">
-        {cells.map((cell, index) => (
-          <button
-            className="cell bg-secondary-200"
-            key={index}
-            onClick={() => handleCellClick(Math.floor(index / 3), index % 3)}
-          >
-            {cell}
+    <div>
+      <PopupRestart
+        restartGame={restartGame}
+        showPopup={showPopup}
+      ></PopupRestart>
+      {/* <Popup></Popup> */}
+      <div className="board">
+        <div className="navbar">
+          <div>
+            <img className="logo" src="assets/logo.svg" alt="logo" />
+          </div>
+          <button className="turn fs-200 text-secondary-300 fw-bold">
+            <div className="player-turn">{playerTurn}</div> TURN
           </button>
-        ))}
-      </div>
-      <div className="btn-score">
-        <div className="score fs-100 fw-medium bg-primary-100">
-          X (YOU)
-          <span className="you-score fs-400 fw-bold bg-primary-100">0</span>
+          <button
+            className="btn-restart bg-secondary-300"
+            onClick={() => showPopup(true)}
+          >
+            <img
+              className="icon-restart"
+              src="assets/icon-restart.svg"
+              alt="restart"
+            />
+          </button>
         </div>
-        <div className="score fs-100 fw-medium bg-secondary-300">
-          TIES
-          <span className="tie-score fs-400 fw-bold bg-secondary-300">0</span>
+        <div className="board-table">
+          {cells.map((cell, index) => (
+            <button
+              className="cell bg-secondary-200"
+              key={index}
+              onClick={() => handleCellClick(Math.floor(index / 3), index % 3)}
+            >
+              {cell}
+            </button>
+          ))}
         </div>
-        <div className="score fs-100 fw-medium bg-primary-300">
-          O (CPU)
-          <span className="cpu-score fs-400 fw-bold bg-primary-300">0</span>
+        <div className="btn-score">
+          <div className="score fs-100 fw-medium bg-primary-100">
+            X (YOU)
+            <span className="you-score fs-400 fw-bold bg-primary-100">0</span>
+          </div>
+          <div className="score fs-100 fw-medium bg-secondary-300">
+            TIES
+            <span className="tie-score fs-400 fw-bold bg-secondary-300">0</span>
+          </div>
+          <div className="score fs-100 fw-medium bg-primary-300">
+            O (CPU)
+            <span className="cpu-score fs-400 fw-bold bg-primary-300">0</span>
+          </div>
         </div>
       </div>
     </div>

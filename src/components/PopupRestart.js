@@ -2,7 +2,7 @@ import React from "react";
 
 function PopupRestart({ restartGame, showPopup }) {
   return (
-    <div className={`popup-restart ${showPopup === true ? "hidden" : "flex"}`}>
+    <div className={`popup-restart ${showPopup === false ? "flex" : "hidden"}`}>
       <div className="popup-container">
         <div>
           <div className="text-secondary-300 fs-500 fw-bold bg-secondary-200">
@@ -10,7 +10,7 @@ function PopupRestart({ restartGame, showPopup }) {
           </div>
           <div className="bg-secondary-200">
             <button
-              onClick={showPopup(true)}
+              onClick={() => showPopup(true)}
               className="btn-1 btn-restart-1 bg-secondary-300 fs-200 fw-bold"
             >
               NO, CANCEL
