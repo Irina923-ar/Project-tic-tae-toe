@@ -201,6 +201,7 @@ body {
 .switch svg {
   width: 40px;
   height: 40px;
+  pointer-events: none;
 }
 
 .switch path {
