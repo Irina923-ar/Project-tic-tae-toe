@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PopupRestart from "./PopupRestart";
+import Popup from "./Popup";
 
 const svgX = (
   <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
@@ -19,8 +20,9 @@ const svgO = (
   </svg>
 );
 
-function GameBoard({ checkWinner, showPopup, restartGame }) {
+const GameBoard = ({ winner, checkWinner, restartGame }) => {
   const [cells, setCells] = useState(Array(9).fill(""));
+  const [memoryCells, setMemoryCells] = useState(Array(9).fill(""));
   const [playerTurn, setPlayerTurn] = useState(svgX);
   const popupTitle = document.getElementById("popupTitle");
   const popupSubtitle = document.getElementById("popupSubtitle");
@@ -30,11 +32,14 @@ function GameBoard({ checkWinner, showPopup, restartGame }) {
 
   const handleCellClick = (row, col) => {
     const newCells = [...cells];
+    const newMemoryCells = [...memoryCells];
     if (newCells[row * 3 + col] === "") {
       newCells[row * 3 + col] = playerTurn === svgX ? svgX : svgO;
+      newMemoryCells[row * 3 + col] = playerTurn === svgX ? "X" : "O";
       setCells(newCells);
+      setMemoryCells(newMemoryCells);
       setPlayerTurn(playerTurn === svgX ? svgO : svgX);
-      checkWinner();
+      checkWinner(newMemoryCells);
     }
   };
 
@@ -63,13 +68,12 @@ function GameBoard({ checkWinner, showPopup, restartGame }) {
     }, 500);
   };
 
+  const [showPopup, setShowPopup] = useState(false);
+
   return (
     <div>
-      <PopupRestart
-        restartGame={restartGame}
-        showPopup={showPopup}
-      ></PopupRestart>
-      {/* <Popup></Popup> */}
+      <PopupRestart restartGame={restartGame} showPopup={showPopup} setShowPopup={setShowPopup}></PopupRestart>
+      <Popup winner={winner} onQuit={""} onNextRound={""}></Popup>
       <div className="board">
         <div className="navbar">
           <div>
@@ -80,13 +84,11 @@ function GameBoard({ checkWinner, showPopup, restartGame }) {
           </button>
           <button
             className="btn-restart bg-secondary-300"
-            onClick={() => showPopup(true)}
+            onClick={() => {
+              setShowPopup(true);
+            }}
           >
-            <img
-              className="icon-restart"
-              src="assets/icon-restart.svg"
-              alt="restart"
-            />
+            <img className="icon-restart" src="assets/icon-restart.svg" alt="restart" />
           </button>
         </div>
         <div className="board-table">
@@ -117,6 +119,6 @@ function GameBoard({ checkWinner, showPopup, restartGame }) {
       </div>
     </div>
   );
-}
+};
 
 export default GameBoard;
