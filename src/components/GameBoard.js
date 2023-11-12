@@ -24,11 +24,7 @@ const GameBoard = ({ winner, checkWinner, restartGame }) => {
   const [cells, setCells] = useState(Array(9).fill(""));
   const [memoryCells, setMemoryCells] = useState(Array(9).fill(""));
   const [playerTurn, setPlayerTurn] = useState(svgX);
-  const popupTitle = document.getElementById("popupTitle");
-  const popupSubtitle = document.getElementById("popupSubtitle");
-  const btnQuit = document.getElementById("btnQuit");
-  const btnNextRound = document.getElementById("btnNextRound");
-  const popup = document.getElementById("popup");
+  const [playerMark, setPlayerMark] = useState("");
 
   const handleCellClick = (row, col) => {
     const newCells = [...cells];
@@ -39,41 +35,26 @@ const GameBoard = ({ winner, checkWinner, restartGame }) => {
       setCells(newCells);
       setMemoryCells(newMemoryCells);
       setPlayerTurn(playerTurn === svgX ? svgO : svgX);
+      setPlayerMark(playerMark === svgX ? "X" : "O");
       checkWinner(newMemoryCells);
     }
-  };
-
-  const calculateScore = (player1, player2, isComputerTurn) => {
-    setTimeout(() => {
-      if (player1 === true) {
-        popupTitle.innerText = "YOU WON!";
-        popupSubtitle.innerHTML = svgX + `TAKES THE ROUND`;
-        popupSubtitle.style.color = "#31C3BD";
-        btnQuit.innerText = "QUIT";
-        btnNextRound.innerText = "NEXT ROUND";
-      } else if (player2 === true || isComputerTurn === true) {
-        popupTitle.innerText = "OH NO, YOU LOST";
-        popupSubtitle.innerHTML = svgO + `TAKES THE ROUND`;
-        popupSubtitle.style.color = "#F2B137";
-        btnQuit.innerText = "QUIT";
-        btnNextRound.innerText = "NEXT ROUND";
-      } else {
-        popupSubtitle.innerHTML = "ROUND TIED";
-        popupSubtitle.style.color = "#A8BFC9";
-        btnQuit.innerText = "QUIT";
-        btnNextRound.innerText = "NEXT ROUND";
-      }
-
-      popup.style.display = "flex";
-    }, 500);
   };
 
   const [showPopup, setShowPopup] = useState(false);
 
   return (
     <div>
-      <PopupRestart restartGame={restartGame} showPopup={showPopup} setShowPopup={setShowPopup}></PopupRestart>
-      <Popup winner={winner} onQuit={""} onNextRound={""}></Popup>
+      <PopupRestart
+        restartGame={restartGame}
+        showPopup={showPopup}
+        setShowPopup={setShowPopup}
+      ></PopupRestart>
+      <Popup
+        playerMark={playerMark}
+        winner={winner}
+        onQuit={restartGame}
+        onNextRound={""}
+      ></Popup>
       <div className="board">
         <div className="navbar">
           <div>
@@ -88,7 +69,11 @@ const GameBoard = ({ winner, checkWinner, restartGame }) => {
               setShowPopup(true);
             }}
           >
-            <img className="icon-restart" src="assets/icon-restart.svg" alt="restart" />
+            <img
+              className="icon-restart"
+              src="assets/icon-restart.svg"
+              alt="restart"
+            />
           </button>
         </div>
         <div className="board-table">
