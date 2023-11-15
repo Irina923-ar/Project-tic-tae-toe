@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PopupRestart from "./PopupRestart";
 import Popup from "./Popup";
 
@@ -26,35 +26,54 @@ const GameBoard = ({ winner, checkWinner, restartGame }) => {
   const [playerTurn, setPlayerTurn] = useState(svgX);
   const [playerMark, setPlayerMark] = useState("");
 
+  useEffect(() => {
+    if (winner === "") return;
+    setShowPopupWinner((prev) => !prev);
+  }, [winner]);
+
+  const getRandomInt = (max) => {
+    return Math.floor(Math.random() * max);
+  };
+
+  const getRandomPosition = () => {
+    const row = getRandomInt(3);
+    const col = getRandomInt(3);
+    return row * 3 + col;
+  };
+
   const handleCellClick = (row, col) => {
     const newCells = [...cells];
     const newMemoryCells = [...memoryCells];
     if (newCells[row * 3 + col] === "") {
       newCells[row * 3 + col] = playerTurn === svgX ? svgX : svgO;
       newMemoryCells[row * 3 + col] = playerTurn === svgX ? "X" : "O";
+
+      let randomPosition = getRandomPosition();
+      while (newCells[randomPosition] !== "") {
+        randomPosition = getRandomPosition();
+      }
+      newCells[randomPosition] = playerTurn === svgX ? svgO : svgX;
+      newMemoryCells[randomPosition] = playerTurn === svgX ? "O" : "X";
+
       setCells(newCells);
       setMemoryCells(newMemoryCells);
-      setPlayerTurn(playerTurn === svgX ? svgO : svgX);
-      setPlayerMark(playerMark === svgX ? "X" : "O");
       checkWinner(newMemoryCells);
     }
   };
 
-  const [showPopup, setShowPopup] = useState(false);
+  const [showPopupRestart, setShowPopupRestart] = useState(false);
+  const [showPopupWinner, setShowPopupWinner] = useState(false);
 
   return (
     <div>
       <PopupRestart
         restartGame={restartGame}
-        showPopup={showPopup}
-        setShowPopup={setShowPopup}
+        showPopup={showPopupRestart}
+        setShowPopup={setShowPopupRestart}
       ></PopupRestart>
-      <Popup
-        playerMark={playerMark}
-        winner={winner}
-        onQuit={restartGame}
-        onNextRound={""}
-      ></Popup>
+      {showPopupWinner ? (
+        <Popup playerMark={playerMark} winner={winner} onQuit={restartGame} onNextRound={""}></Popup>
+      ) : null}
       <div className="board">
         <div className="navbar">
           <div>
@@ -66,14 +85,10 @@ const GameBoard = ({ winner, checkWinner, restartGame }) => {
           <button
             className="btn-restart bg-secondary-300"
             onClick={() => {
-              setShowPopup(true);
+              setShowPopupRestart(true);
             }}
           >
-            <img
-              className="icon-restart"
-              src="assets/icon-restart.svg"
-              alt="restart"
-            />
+            <img className="icon-restart" src="assets/icon-restart.svg" alt="restart" />
           </button>
         </div>
         <div className="board-table">
