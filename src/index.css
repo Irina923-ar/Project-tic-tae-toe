@@ -383,7 +383,7 @@ body {
 /*Popup button */
 
 .popup-winner button {
-  display: inline-flex;
+  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
