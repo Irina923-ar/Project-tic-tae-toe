@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import PopupRestart from "./PopupRestart";
+import Constants from "../Constants";
 import Popup from "./Popup";
 
 const svgX = (
@@ -20,44 +22,86 @@ const svgO = (
   </svg>
 );
 
-const GameBoard = ({ winner, checkWinner, restartGame }) => {
+const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
   const [cells, setCells] = useState(Array(9).fill(""));
   const [memoryCells, setMemoryCells] = useState(Array(9).fill(""));
   const [playerTurn, setPlayerTurn] = useState(svgX);
-  const [playerMark, setPlayerMark] = useState("");
+  const [winner, setWinner] = useState("");
+  const [computerMark, setComputerMark] = useState(playerMark === "X" ? "O" : "X");
 
   useEffect(() => {
     if (winner === "") return;
     setShowPopupWinner((prev) => !prev);
   }, [winner]);
 
+  useEffect(() => {
+    if (playerMark === "O" && gameMode === "vs-computer") {
+      makeComputerMove();
+    }
+  }, []);
+
   const getRandomInt = (max) => {
     return Math.floor(Math.random() * max);
   };
 
-  const getRandomPosition = () => {
+  const getRandomPosition = (cells) => {
+    // ia toate valorile libere si returneaza una aleatorie
+    if (cells.every((elem) => elem !== "")) return;
     const row = getRandomInt(3);
     const col = getRandomInt(3);
     return row * 3 + col;
   };
 
-  const handleCellClick = (row, col) => {
-    const newCells = [...cells];
-    const newMemoryCells = [...memoryCells];
-    if (newCells[row * 3 + col] === "") {
-      newCells[row * 3 + col] = playerTurn === svgX ? svgX : svgO;
-      newMemoryCells[row * 3 + col] = playerTurn === svgX ? "X" : "O";
-
-      let randomPosition = getRandomPosition();
-      while (newCells[randomPosition] !== "") {
-        randomPosition = getRandomPosition();
+  const checkWinner = (currentBoard) => {
+    for (const pattern of Constants.WinningPatterns) {
+      const [a, b, c] = pattern;
+      if (
+        currentBoard[a - 1] === currentBoard[b - 1] &&
+        currentBoard[a - 1] === currentBoard[c - 1] &&
+        currentBoard[b - 1] === currentBoard[c - 1]
+      ) {
+        setWinner(currentBoard[a - 1]);
+        return;
       }
-      newCells[randomPosition] = playerTurn === svgX ? svgO : svgX;
-      newMemoryCells[randomPosition] = playerTurn === svgX ? "O" : "X";
+    }
+  };
 
-      setCells(newCells);
-      setMemoryCells(newMemoryCells);
-      checkWinner(newMemoryCells);
+  const handleCellClick = (row, col) => {
+    const position = row * 3 + col;
+    if (cells[position] !== "") {
+      return;
+    }
+    setCells((prevCells) => {
+      let newCells = [...prevCells];
+      newCells[position] = playerMark === "X" ? svgX : svgO;
+      return newCells;
+    });
+    setMemoryCells((prevMemoryCels) => {
+      let newCells = [...prevMemoryCels];
+      newCells[position] = playerMark === "X" ? "X" : "O";
+      return newCells;
+    });
+    checkWinner(memoryCells);
+
+    setTimeout(() => makeComputerMove(), 1000);
+  };
+
+  const makeComputerMove = () => {
+    let position = getRandomPosition(cells);
+    if (cells[position] !== "" && memoryCells[position] !== "") {
+      return;
+    } else {
+      setCells((prevCells) => {
+        let newCells = [...prevCells];
+        newCells[position] = computerMark === "X" ? svgX : svgO;
+        return newCells;
+      });
+      setMemoryCells((prevMemoryCels) => {
+        let newCells = [...prevMemoryCels];
+        newCells[position] = computerMark === "X" ? "X" : "O";
+        return newCells;
+      });
+      checkWinner(memoryCells);
     }
   };
 
@@ -72,7 +116,13 @@ const GameBoard = ({ winner, checkWinner, restartGame }) => {
         setShowPopup={setShowPopupRestart}
       ></PopupRestart>
       {showPopupWinner ? (
-        <Popup playerMark={playerMark} winner={winner} onQuit={restartGame} onNextRound={""}></Popup>
+        <Popup
+          playerMark={playerMark}
+          setPlayerMark={setPlayerMark}
+          winner={winner}
+          onRestartGame={restartGame}
+          onNextRound={""}
+        ></Popup>
       ) : null}
       <div className="board">
         <div className="navbar">
@@ -80,7 +130,7 @@ const GameBoard = ({ winner, checkWinner, restartGame }) => {
             <img className="logo" src="assets/logo.svg" alt="logo" />
           </div>
           <button className="turn fs-200 text-secondary-300 fw-bold">
-            <div className="player-turn">{playerTurn}</div> TURN
+            <div className="player-turn">{playerMark === "X" ? svgX : svgO}</div> TURN
           </button>
           <button
             className="btn-restart bg-secondary-300"
