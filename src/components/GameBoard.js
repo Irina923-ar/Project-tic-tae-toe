@@ -27,7 +27,9 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
   const [memoryCells, setMemoryCells] = useState(Array(9).fill(""));
   const [playerTurn, setPlayerTurn] = useState(svgX);
   const [winner, setWinner] = useState("");
-  const [computerMark, setComputerMark] = useState(playerMark === "X" ? "O" : "X");
+  const [computerMark, setComputerMark] = useState(
+    playerMark === "X" ? "O" : "X"
+  );
 
   useEffect(() => {
     if (winner === "") return;
@@ -46,10 +48,25 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
 
   const getRandomPosition = (cells) => {
     // ia toate valorile libere si returneaza una aleatorie
-    if (cells.every((elem) => elem !== "")) return;
+    const emptyCellIndices = cells.reduce((acc, cell, index) => {
+      if (cell === "") {
+        acc.push(index);
+      }
+      return acc;
+    }, []);
+
+    if (emptyCellIndices.length === 0) {
+      return;
+    }
+
+    const randomIndex = emptyCellIndices[getRandomInt(emptyCellIndices.length)];
+
+    return randomIndex;
+
+    /* if (cells.every((elem) => elem !== "")) return;
     const row = getRandomInt(3);
     const col = getRandomInt(3);
-    return row * 3 + col;
+    return row * 3 + col; */
   };
 
   const checkWinner = (currentBoard) => {
@@ -88,7 +105,7 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
 
   const makeComputerMove = () => {
     let position = getRandomPosition(cells);
-    if (cells[position] !== "" && memoryCells[position] !== "") {
+    if (cells[position] !== "") {
       return;
     } else {
       setCells((prevCells) => {
@@ -130,7 +147,10 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
             <img className="logo" src="assets/logo.svg" alt="logo" />
           </div>
           <button className="turn fs-200 text-secondary-300 fw-bold">
-            <div className="player-turn">{playerMark === "X" ? svgX : svgO}</div> TURN
+            <div className="player-turn">
+              {playerMark === "X" ? svgX : svgO}
+            </div>{" "}
+            TURN
           </button>
           <button
             className="btn-restart bg-secondary-300"
@@ -138,7 +158,11 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
               setShowPopupRestart(true);
             }}
           >
-            <img className="icon-restart" src="assets/icon-restart.svg" alt="restart" />
+            <img
+              className="icon-restart"
+              src="assets/icon-restart.svg"
+              alt="restart"
+            />
           </button>
         </div>
         <div className="board-table">
