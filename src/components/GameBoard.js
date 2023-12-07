@@ -23,11 +23,22 @@ const svgO = (
 );
 
 const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
-  const [cells, setCells] = useState(Array(9).fill(""));
+  const [cells, setCells] = useState([
+    { id: 0, value: "" },
+    { id: 1, value: "" },
+    { id: 2, value: "" },
+    { id: 3, value: "" },
+    { id: 4, value: "" },
+    { id: 5, value: "" },
+    { id: 6, value: "" },
+    { id: 7, value: "" },
+    { id: 8, value: "" },
+  ]);
   const [memoryCells, setMemoryCells] = useState(Array(9).fill(""));
-  const [playerTurn, setPlayerTurn] = useState(svgX);
+  const [turn, setTurn] = useState("X");
   const [winner, setWinner] = useState("");
-  const [computerMark, setComputerMark] = useState(playerMark === "X" ? "O" : "X");
+  const computerMark = playerMark === "X" ? "O" : "X";
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     if (winner === "") return;
@@ -35,74 +46,86 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
   }, [winner]);
 
   useEffect(() => {
-    if (playerMark === "O" && gameMode === "vs-computer") {
+    if (playerMark !== turn && gameOver === false) {
       makeComputerMove();
     }
-  }, []);
-
-  const getRandomInt = (max) => {
-    return Math.floor(Math.random() * max);
-  };
-
-  const getRandomPosition = (cells) => {
-    // ia toate valorile libere si returneaza una aleatorie
-    if (cells.every((elem) => elem !== "")) return;
-    const row = getRandomInt(3);
-    const col = getRandomInt(3);
-    return row * 3 + col;
-  };
+  }, [turn, winner]);
 
   const checkWinner = (currentBoard) => {
     for (const pattern of Constants.WinningPatterns) {
       const [a, b, c] = pattern;
       if (
+        currentBoard[a - 1] &&
         currentBoard[a - 1] === currentBoard[b - 1] &&
-        currentBoard[a - 1] === currentBoard[c - 1] &&
-        currentBoard[b - 1] === currentBoard[c - 1]
+        currentBoard[a - 1] === currentBoard[c - 1]
       ) {
-        setWinner(currentBoard[a - 1]);
-        return;
+        setGameOver((prev) => !prev);
+        return currentBoard[a - 1];
       }
     }
+    return null;
+  };
+
+  useEffect(() => {
+    let winner = checkWinner(memoryCells);
+    if (winner) setWinner(winner);
+  }, [memoryCells, checkWinner]);
+
+  const getAllEmptyPositions = (cells) => {
+    if (cells.some((cell) => cell.value === "") === false) return;
+    let emptyPositions = [];
+    cells.forEach((cell) => {
+      if (cell.value === "") emptyPositions.push(cell.id);
+    });
+    return emptyPositions;
+  };
+
+  const getRandomPosition = (cells) => {
+    let emptyCells = getAllEmptyPositions(cells);
+    let position = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    return position;
   };
 
   const handleCellClick = (row, col) => {
-    const position = row * 3 + col;
-    if (cells[position] !== "") {
-      return;
-    }
-    setCells((prevCells) => {
-      let newCells = [...prevCells];
-      newCells[position] = playerMark === "X" ? svgX : svgO;
-      return newCells;
-    });
-    setMemoryCells((prevMemoryCels) => {
-      let newCells = [...prevMemoryCels];
-      newCells[position] = playerMark === "X" ? "X" : "O";
-      return newCells;
-    });
-    checkWinner(memoryCells);
-
-    setTimeout(() => makeComputerMove(), 1000);
-  };
-
-  const makeComputerMove = () => {
-    let position = getRandomPosition(cells);
-    if (cells[position] !== "" && memoryCells[position] !== "") {
-      return;
-    } else {
+    if (playerMark === turn) {
+      const position = row * 3 + col;
+      if (cells[position].value !== "") {
+        return;
+      }
       setCells((prevCells) => {
         let newCells = [...prevCells];
-        newCells[position] = computerMark === "X" ? svgX : svgO;
+        newCells[position].value = playerMark === "X" ? svgX : svgO;
         return newCells;
       });
       setMemoryCells((prevMemoryCels) => {
         let newCells = [...prevMemoryCels];
-        newCells[position] = computerMark === "X" ? "X" : "O";
+        newCells[position] = playerMark === "X" ? "X" : "O";
         return newCells;
       });
-      checkWinner(memoryCells);
+      setTurn(playerMark === "X" ? "O" : "X");
     }
+  };
+
+  const makeComputerMove = () => {
+    setTimeout(() => {
+      let position = getRandomPosition(cells);
+      if (cells[position].value !== "" && memoryCells[position] !== "") {
+        return;
+      } else {
+        setCells((prevCells) => {
+          let newCells = [...prevCells];
+          newCells[position].value = computerMark === "X" ? svgX : svgO;
+          return newCells;
+        });
+        setMemoryCells((prevMemoryCels) => {
+          let newCells = [...prevMemoryCels];
+          newCells[position] = computerMark === "X" ? "X" : "O";
+          return newCells;
+        });
+        setTurn(playerMark === "X" ? "X" : "O");
+        checkWinner(memoryCells);
+      }
+    }, 1000);
   };
 
   const [showPopupRestart, setShowPopupRestart] = useState(false);
@@ -130,7 +153,7 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
             <img className="logo" src="assets/logo.svg" alt="logo" />
           </div>
           <button className="turn fs-200 text-secondary-300 fw-bold">
-            <div className="player-turn">{playerMark === "X" ? svgX : svgO}</div> TURN
+            <div className="player-turn">{turn === "X" ? svgX : svgO}</div> TURN
           </button>
           <button
             className="btn-restart bg-secondary-300"
@@ -148,7 +171,7 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
               key={index}
               onClick={() => handleCellClick(Math.floor(index / 3), index % 3)}
             >
-              {cell}
+              {cell.value}
             </button>
           ))}
         </div>
