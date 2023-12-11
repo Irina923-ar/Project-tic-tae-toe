@@ -21,17 +21,15 @@ function Popup({ winner, onRestartGame, onNextRound, playerMark, setPlayerMark }
         <div className="flex">
           <button
             onClick={() => {
-              onRestartGame(false);
-              setPlayerMark("");
+              // onRestartGame(false);
+              // setPlayerMark(null);
             }}
             className="btn-1 btn-quit bg-secondary-300 fs-200 fw-bold"
           >
             QUIT
           </button>
-          <button
-            /* onClick={onNextRound(false)} */
-            className="btn-2 btn-next-round bg-primary-300 fs-200 fw-bold"
-          >
+          <button className="btn-2 btn-next-round bg-primary-300 fs-200 fw-bold">
+            {/* onClick={onNextRound()}  */}
             NEXT ROUND
           </button>
         </div>
