@@ -110,7 +110,8 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
             <img className="logo" src="assets/logo.svg" alt="logo" />
           </div>
           <button className="turn fs-200 text-secondary-300 fw-bold">
-            <div className="player-turn">{turn === "X" ? X_SVG : O_SVG}</div> TURN
+            <div className="player-turn">{turn === "X" ? X_SVG : O_SVG}</div>{" "}
+            TURN
           </button>
           <button
             className="btn-restart bg-secondary-300"
@@ -118,7 +119,11 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
               setShowPopupRestart(true);
             }}
           >
-            <img className="icon-restart" src="assets/icon-restart.svg" alt="restart" />
+            <img
+              className="icon-restart"
+              src="assets/icon-restart.svg"
+              alt="restart"
+            />
           </button>
         </div>
 

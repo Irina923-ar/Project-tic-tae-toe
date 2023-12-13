@@ -26,6 +26,14 @@
   --fs-button-s-count: 24px;
 }
 
+.text-x-color {
+  color: var(--clr-primary-200);
+}
+
+.text-o-color {
+  color: var(--clr-primary-400);
+}
+
 /* Utility classes */
 
 .text-primary-100 {
@@ -129,13 +137,16 @@ body {
   min-height: 100vh;
   background-color: var(--clr-secondary-100);
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .start-page {
-  display: grid;
+  display: block;
   max-width: 460px;
   margin: 0 auto;
-  margin-top: 120px;
+  position: relative;
 }
 
 .logo {
@@ -245,10 +256,10 @@ body {
 /* Board */
 
 .board {
-  display: grid;
+  display: block;
   max-width: 460px;
-  margin: auto;
-  margin-top: 120px;
+  margin: 0 auto;
+  position: relative;
 }
 
 .board-table {
@@ -341,6 +352,7 @@ body {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 2;
+  left: 0;
 }
 
 .flex {
@@ -352,7 +364,6 @@ body {
 }
 
 .popup-restart {
-  /* display: none; */
   position: fixed;
   width: 100%;
   height: 100%;
@@ -360,6 +371,8 @@ body {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.6);
   top: 0px;
+  left: 0;
+  z-index: 2;
 }
 
 .popup-container {
