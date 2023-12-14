@@ -6,6 +6,7 @@ function Popup({
   onNextRound,
   playerMark,
   setPlayerMark,
+  memoryCells,
 }) {
   const getMessage = () => {
     if (winner === playerMark) {
@@ -13,10 +14,10 @@ function Popup({
     } else if (winner && winner !== playerMark) {
       return "OH NO, YOU LOST";
     } else {
-      return "ROUND TIED";
+      return;
     }
   };
-
+  console.log(memoryCells);
   const getWinnerSubtitle = () => {
     if (winner) {
       let subtitleColorClass;
@@ -31,7 +32,7 @@ function Popup({
           {`${winner} TAKES THE ROUND`}
         </div>
       );
-    } else if (!winner) {
+    } else {
       return (
         <div className="popup-subtitle fs-500 fw-bold text-secondary-300">
           ROUND TIED

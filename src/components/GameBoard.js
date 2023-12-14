@@ -48,15 +48,25 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
 
     if (winner !== null) {
       setShowPopupWinner(true);
-      setCells(newCells);
       setMemoryCells(newMemoryCells);
+      setCells(newCells);
       setWinner(winner);
       setIsGameOver(true);
       setTurn(null);
+    } else {
+      const isTie = newMemoryCells.every((cell) => cell !== "");
+      if (isTie) {
+        setShowPopupWinner(true);
+        setMemoryCells(newMemoryCells);
+        setCells(newCells);
+        setIsGameOver(true);
+        setTurn(null);
+      }
     }
-    setCells(newCells);
     setMemoryCells(newMemoryCells);
+    setCells(newCells);
     setTurn((prev) => (prev === "X" ? "O" : "X"));
+    console.log(newMemoryCells);
   };
 
   const makeComputerMove = () => {
@@ -72,15 +82,24 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
 
     if (winner !== null) {
       setShowPopupWinner(true);
-      setCells(newCells);
       setMemoryCells(newMemoryCells);
+      setCells(newCells);
       setWinner(winner);
       setIsGameOver(true);
       setTurn(null);
+    } else {
+      const isTie = newMemoryCells.every((cell) => cell !== "");
+      if (isTie) {
+        setShowPopupWinner(true);
+        setMemoryCells(newMemoryCells);
+        setCells(newCells);
+        setIsGameOver(true);
+        setTurn(null);
+      }
     }
 
-    setCells(newCells);
     setMemoryCells(newMemoryCells);
+    setCells(newCells);
     setTurn(playerMark === "X" ? "X" : "O");
   };
 
@@ -100,6 +119,7 @@ const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
           setPlayerMark={setPlayerMark}
           winner={winner}
           onRestartGame={restartGame}
+          memoryCells={memoryCells}
           // onNextRound={handleNextRound}
         ></Popup>
       ) : null}
