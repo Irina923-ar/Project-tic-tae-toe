@@ -1,88 +1,181 @@
-import {useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
 
-const svgX = <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg"><path d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z" fill="#31C3BD" fill-rule="evenodd"/></svg>;
-const svgO = <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg"><path d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z" fill="#F2B137"/></svg>;
+import Popup from "./Popup";
+import PopupRestart from "./PopupRestart";
+import { X_SVG, O_SVG } from "../utils/Constants";
+import { checkWinner, getRandomPosition } from "../utils/HelperFunctions";
 
+const GameBoard = ({ playerMark, setPlayerMark, gameMode, restartGame }) => {
+  const [cells, setCells] = useState([
+    { id: 0, value: "" },
+    { id: 1, value: "" },
+    { id: 2, value: "" },
+    { id: 3, value: "" },
+    { id: 4, value: "" },
+    { id: 5, value: "" },
+    { id: 6, value: "" },
+    { id: 7, value: "" },
+    { id: 8, value: "" },
+  ]);
+  const [memoryCells, setMemoryCells] = useState(Array(9).fill(""));
+  const [turn, setTurn] = useState("X");
+  const [winner, setWinner] = useState(null);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [showPopupRestart, setShowPopupRestart] = useState(false);
+  const [showPopupWinner, setShowPopupWinner] = useState(false);
 
-function GameBoard({checkWinner}) {
+  const computerMark = playerMark === "X" ? "O" : "X";
 
-  const [cells, setCells] = useState(Array(9).fill(''));
-  const [playerTurn, setPlayerTurn] = useState(svgX);
-  const popupTitle = document.getElementById('popupTitle');
-  const popupSubtitle = document.getElementById('popupSubtitle');
-  const btnQuit = document.getElementById('btnQuit');
-  const btnNextRound = document.getElementById('btnNextRound');
-  const popup = document.getElementById('popup');
+  useEffect(() => {
+    if (isGameOver || playerMark === turn) return;
+    makeComputerMove();
+  }, [turn, isGameOver, playerMark]);
 
   const handleCellClick = (row, col) => {
-    const newCells = [...cells];
-    if (newCells[row * 3 + col] === '') {
-      newCells[row * 3 + col] = playerTurn === svgX ? svgX : svgO;
+    if (playerMark !== turn || isGameOver) return;
+
+    const position = row * 3 + col;
+    if (cells[position].value !== "") return;
+
+    let newCells = [...cells];
+    let newMemoryCells = [...memoryCells];
+
+    newCells[position].value = playerMark === "X" ? X_SVG : O_SVG;
+    newMemoryCells[position] = playerMark === "X" ? "X" : "O";
+
+    let winner = checkWinner(newMemoryCells);
+
+    if (winner !== null) {
+      setShowPopupWinner(true);
+      setMemoryCells(newMemoryCells);
       setCells(newCells);
-      setPlayerTurn(playerTurn === svgX ? svgO : svgX);
-      checkWinner();
-    };
-  }
-
-  const calculateScore = (player1, player2, isComputerTurn) => {
-    setTimeout(() => {
-      if (player1 === true) {
-        popupTitle.innerText = 'YOU WON!';
-        popupSubtitle.innerHTML = svgX + `TAKES THE ROUND`;
-        popupSubtitle.style.color = '#31C3BD';
-        btnQuit.innerText = 'QUIT';
-        btnNextRound.innerText = 'NEXT ROUND';
-      } else if (player2 === true || isComputerTurn === true) {
-        popupTitle.innerText = 'OH NO, YOU LOST';
-        popupSubtitle.innerHTML = svgO + `TAKES THE ROUND`;
-        popupSubtitle.style.color = '#F2B137';
-        btnQuit.innerText = 'QUIT';
-        btnNextRound.innerText = 'NEXT ROUND';
-      } else {
-        popupSubtitle.innerHTML = 'ROUND TIED';
-        popupSubtitle.style.color = '#A8BFC9';
-        btnQuit.innerText = 'QUIT';
-        btnNextRound.innerText = 'NEXT ROUND';
+      setWinner(winner);
+      setIsGameOver(true);
+      setTurn(null);
+    } else {
+      const isTie = newMemoryCells.every((cell) => cell !== "");
+      if (isTie) {
+        setShowPopupWinner(true);
+        setMemoryCells(newMemoryCells);
+        setCells(newCells);
+        setIsGameOver(true);
+        setTurn(null);
       }
+    }
+    setMemoryCells(newMemoryCells);
+    setCells(newCells);
+    setTurn((prev) => (prev === "X" ? "O" : "X"));
+    console.log(newMemoryCells);
+  };
 
-      popup.style.display = 'flex';
-    }, 500);
-  }
+  const makeComputerMove = () => {
+    let position = getRandomPosition(cells);
+    if (position < 0) return;
 
+    let newCells = [...cells];
+    let newMemoryCells = [...memoryCells];
+    newCells[position].value = computerMark === "X" ? X_SVG : O_SVG;
+    newMemoryCells[position] = computerMark === "X" ? "X" : "O";
+
+    let winner = checkWinner(newMemoryCells);
+
+    if (winner !== null) {
+      setShowPopupWinner(true);
+      setMemoryCells(newMemoryCells);
+      setCells(newCells);
+      setWinner(winner);
+      setIsGameOver(true);
+      setTurn(null);
+    } else {
+      const isTie = newMemoryCells.every((cell) => cell !== "");
+      if (isTie) {
+        setShowPopupWinner(true);
+        setMemoryCells(newMemoryCells);
+        setCells(newCells);
+        setIsGameOver(true);
+        setTurn(null);
+      }
+    }
+
+    setMemoryCells(newMemoryCells);
+    setCells(newCells);
+    setTurn(playerMark === "X" ? "X" : "O");
+  };
 
   return (
-    <div className="board">
-      <div className="navbar">
-        <div>
-          <img className="logo" src="assets/logo.svg" alt="logo" />
+    <div>
+      {restartGame ? (
+        <PopupRestart
+          restartGame={restartGame}
+          showPopup={showPopupRestart}
+          setShowPopup={setShowPopupRestart}
+        ></PopupRestart>
+      ) : null}
+
+      {showPopupWinner ? (
+        <Popup
+          playerMark={playerMark}
+          setPlayerMark={setPlayerMark}
+          winner={winner}
+          onRestartGame={restartGame}
+          memoryCells={memoryCells}
+          // onNextRound={handleNextRound}
+        ></Popup>
+      ) : null}
+
+      <div className="board">
+        <div className="navbar">
+          <div>
+            <img className="logo" src="assets/logo.svg" alt="logo" />
+          </div>
+          <button className="turn fs-200 text-secondary-300 fw-bold">
+            <div className="player-turn">{turn === "X" ? X_SVG : O_SVG}</div>{" "}
+            TURN
+          </button>
+          <button
+            className="btn-restart bg-secondary-300"
+            onClick={() => {
+              setShowPopupRestart(true);
+            }}
+          >
+            <img
+              className="icon-restart"
+              src="assets/icon-restart.svg"
+              alt="restart"
+            />
+          </button>
         </div>
-        <button className="turn fs-200 text-secondary-300 fw-bold">
-          <div className="player-turn">{playerTurn}</div> TURN
-        </button>
-        <button className="btn-restart bg-secondary-300">
-          <img className="icon-restart" src="assets/icon-restart.svg" alt="restart" />
-        </button>
-      </div>
-      <div className="board-table">
-        {cells.map((cell, index) => (
-            <button className="cell bg-secondary-200" key={index} onClick={() => handleCellClick(Math.floor(index / 3), index % 3)}>
-            {cell}
+
+        <div className="board-table">
+          {cells.map((cell, index) => (
+            <button
+              className="cell bg-secondary-200"
+              key={index}
+              onClick={() => handleCellClick(Math.floor(index / 3), index % 3)}
+            >
+              {cell.value}
             </button>
-        ))}
-      </div>
-      <div className="btn-score">
-        <div className="score fs-100 fw-medium bg-primary-100">X (YOU)
-          <span className="you-score fs-400 fw-bold bg-primary-100">0</span>
+          ))}
         </div>
-        <div className="score fs-100 fw-medium bg-secondary-300">TIES
-          <span className="tie-score fs-400 fw-bold bg-secondary-300">0</span>
-        </div>
-        <div className="score fs-100 fw-medium bg-primary-300">O (CPU)
-          <span className="cpu-score fs-400 fw-bold bg-primary-300">0</span>
+
+        <div className="btn-score">
+          <div className="score fs-100 fw-medium bg-primary-100">
+            X (YOU)
+            <span className="you-score fs-400 fw-bold bg-primary-100">0</span>
+          </div>
+          <div className="score fs-100 fw-medium bg-secondary-300">
+            TIES
+            <span className="tie-score fs-400 fw-bold bg-secondary-300">0</span>
+          </div>
+          <div className="score fs-100 fw-medium bg-primary-300">
+            O (CPU)
+            <span className="cpu-score fs-400 fw-bold bg-primary-300">0</span>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default GameBoard;

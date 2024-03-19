@@ -1,24 +1,9 @@
 import "./App.css";
 import React from "react";
-import GameBoard from "./components/GameBoard";
-import Popup from "./components/Popup";
-import PopupRestart from "./components/PopupRestart";
-import StartPage from "./components/StartPage";
+import Game from "./components/Game";
 
 function App() {
-  const [isVisible, setIsVisible] = useState(true);
-
-  return (
-    <div>
-      {!isVisible ? (
-        <StartPage playerTurn={playerTurn} cells={cells}></StartPage>
-      ) : (
-        <GameBoard />
-      )}
-      <Popup></Popup>
-      <PopupRestart></PopupRestart>
-    </div>
-  );
+  return <Game />;
 }
 
 export default App;
