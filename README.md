@@ -8,7 +8,7 @@ The Tic Tac Toe Game is an interactive web application that brings the classic t
 
 ## Live Demo
 
-Check out the Tic Tac Toe Game: [Live Demo](https://yourprojectname.vercel.app)
+Check out the Tic Tac Toe Game: (https://project-tic-tae-toe.vercel.app/)
 
 ## Features
 
