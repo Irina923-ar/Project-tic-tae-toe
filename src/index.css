@@ -195,6 +195,7 @@ body {
   border: none;
   border-radius: 15px;
   margin: 9px;
+  cursor: pointer;
 }
 
 .switch-active {
@@ -229,10 +230,14 @@ body {
 }
 
 .btn {
-  display: block;
+  display: flex;
   border-radius: 15px;
   border: none;
   margin: 10px 0;
+  cursor: pointer;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn-start-1 {
@@ -421,6 +426,7 @@ body {
 
 .btn-1 {
   box-shadow: inset 0px -4px 0px #6b8997;
+  cursor: pointer;
 }
 
 .btn-1:hover {
@@ -429,6 +435,7 @@ body {
 
 .btn-2 {
   box-shadow: inset 0px -4px 0px #cc8b13;
+  cursor: pointer;
 }
 
 .btn-2:hover {
@@ -452,4 +459,55 @@ body {
 
 .flex {
   display: flex;
+}
+
+@media (max-width: 468px) {
+  .board-table {
+    gap: 10px;
+  }
+
+  .turn {
+    margin: 0 20px;
+  }
+
+  .cell {
+    height: 100px;
+    width: 100px;
+  }
+
+  .score {
+    justify-content: center;
+    padding: 15px 20px;
+  }
+
+  .popup-container .text-secondary-300 {
+    font-size: var(--fs-400);
+  }
+
+  .content {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .popup-subtitle {
+    font-size: var(--fs-400);
+  }
+
+  .btn-switch {
+    margin: 0 10px;
+  }
+
+  .switch {
+    padding: 10px 50px;
+  }
+
+  .btn-start-1 {
+    padding: 20px 0px;
+  }
+
+  .btn-start-2 {
+    padding: 20px 0px;
+  }
 }
