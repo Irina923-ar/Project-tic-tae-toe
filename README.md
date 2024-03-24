@@ -1,36 +1,54 @@
+# Tic Tac Toe Game
 
-# Tic-Tae-Toe Project
+## Description
 
-This is a simple tic-tae-toe project built using HTML, CSS, and JavaScript.
-![image](https://github.com/Irina923-ar/Project-tic-tae-toe/assets/112747712/f1ef8fba-9a3c-4a7d-9dcf-ef369192f64e)
+The Tic Tac Toe Game is an interactive web application that brings the classic tic-tac-toe experience to your browser. Offering both single-player and two-player modes, players can challenge the computer or compete against a friend. The game features a clean, intuitive interface and is built with modern web technologies for a smooth and enjoyable gaming experience.
+
+![INSERT SCREENSHOT HERE]
+
+## Live Demo
+
+Check out the Tic Tac Toe Game: [Live Demo](https://yourprojectname.vercel.app)
 
 ## Features
 
-- Addition
-- Subtraction
-- Multiplication
-- Division
+- **Single Player Mode**: Play against an AI opponent that challenges you at every turn.
+- **Two Player Mode**: Compete against a friend in the same device for a shared fun experience.
+- **Score Tracking**: The game keeps score of how many rounds each player has won, making it easy to keep track of the winner in longer play sessions.
+- **Responsive Design**: Whether you are on a desktop, tablet, or smartphone, the game adjusts to your screen size for an optimal playing experience.
 
-## Deployment
+![INSERT SCREENSHOT HERE]
 
-This project is deployed on Vercel and can be accessed at (https://project-tic-tae-toe.vercel.app/).
+## Technologies Used
 
-## Author
+<img src="https://reactjs.org/logo-og.png" width="50" alt="React.js"> **React.js**
 
-- Galan Irina
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg" width="50" alt="CSS3"> **CSS3**
 
-## Setup
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" width="50" alt="HTML5"> **HTML5**
 
-Clone this repo to your desktop and run npm install to install all the dependencies.
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" width="50" alt="JavaScript"> **JavaScript**
 
-You might want to look into config.json to make change the port you want to use and set up a SSL certificate.
+## Installation and Setup
+
+1. Clone the repository to your local machine:
+    ```
+    git clone https://github.com/yourusername/tic-tac-toe.git
+    ```
+2. Navigate to the project directory:
+    ```
+    cd tic-tac-toe
+    ```
+3. Install the necessary dependencies:
+    ```
+    npm install
+    ```
+4. To start the game, run:
+    ```
+    npm start
+    ```
+    This will launch the Tic Tac Toe Game on `localhost:3000`.
 
 ## Usage
 
-After you clone this repo to your desktop, go to its root directory and run npm install to install its dependencies.
-
-Once the dependencies are installed, you can run npm start to start the application. You will then be able to access it at localhost:3000
-
-To give yourself administrator permissions on the chat, you will have to type /role [your-name] in the app console.
-
-
+Upon starting the game, you'll be presented with an option to select between Single Player and Two Player modes. In Single Player mode, you will play against the computer, whereas in Two Player mode, you can play against another person on the same device. Choose your side, X or O, and click on the grid to make your move. The game tracks and displays the score as you play. Reset the game at any point to start over.
