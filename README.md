@@ -33,7 +33,7 @@ Check out the Tic Tac Toe Game: (https://project-tic-tae-toe.vercel.app/)
 
 1. Clone the repository to your local machine:
     ```
-    git clone https://github.com/yourusername/tic-tac-toe.git
+    git clone (https://github.com/Irina923-ar/Tic-Tac-Toe-Game.git)
     ```
 2. Navigate to the project directory:
     ```
