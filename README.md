@@ -17,7 +17,7 @@ Check out the Tic Tac Toe Game: (https://project-tic-tae-toe.vercel.app/)
 - **Score Tracking**: The game keeps score of how many rounds each player has won, making it easy to keep track of the winner in longer play sessions.
 - **Responsive Design**: Whether you are on a desktop, tablet, or smartphone, the game adjusts to your screen size for an optimal playing experience.
 
-![image](https://github.com/Irina923-ar/Tic-Tac-Toe-Game/assets/112747712/18120456-9311-4b20-87ac-ba4a99a75b13)
+![image](https://github.com/Irina923-ar/Tic-Tac-Toe-Game/assets/112747712/59297600-901b-4bbb-bd50-dc3c6d130599)
 ![image](https://github.com/Irina923-ar/Tic-Tac-Toe-Game/assets/112747712/9b848e22-1d01-4caa-bbbe-54c22b0df3c8)
 ![image](https://github.com/Irina923-ar/Tic-Tac-Toe-Game/assets/112747712/fd4cde17-c6a2-4481-9c11-2ccaa50f1359)
 
